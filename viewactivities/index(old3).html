@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="CHARM - Centralized Health & Activity Record Manager">
+    <meta name="author" content="CHARM Dev Team">
+    <link rel="shortcut icon" href="./ico/favicon.png">
+    
+    <title>View Resident Activities</title>
+    
+    <!-- CSS -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/non-responsive.css" rel="stylesheet">
+    <link href="styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="styles/kendo.default.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #9CC4E4;
+      }
+    </style>
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="../js/html5shiv.js"></script>
+    <script src="../js/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body style>
+    <div  class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">CHARM</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#">Home</a></li>
+            <li class="active"><a href="#">Resident Activities</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+<!--          <form class="navbar-form navbar-right" role="form" name="form-nric" id="form-nric" method="post">-->
+            <div class="form-group">
+              <input type="text" class="form-control input-sm" placeholder="Enter nric" name="txtNric" id="txtNric"  autofocus>
+            </div>
+            <button class="btn btn-default btn-sm" type="submit" value="Get Record" id="submit">Get Record</button>
+<!--          </form>-->
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div id="example" class="k-content">
+        <div id="grid"></div>
+      </div>
+    </div> <!-- /container -->
+      
+    <!-- JAVASCRIPT -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="js/jquery-2.0.3.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootbox.min.js"></script>
+    <script src="js/kendo.web.min.js"></script>
+    <script>
+    function getActivities(){
+      $.getJSON("getactivities.php",{nric:$("#txtNric").val()},function(json)
+      {
+        if(json.success == 1)
+        {
+          console.log("hahaha");
+          setGrid(json.data);
+        }
+        else
+        {
+          alert("Error: No result found");
+        }
+      });
+    };
+    function setGrid(activitiesData){
+      //alert(activitiesData);
+      $("#grid").kendoGrid({
+        dataSource: {
+          data: activitiesData,
+          schema: {
+            model: {
+              fields: {
+                datetime: { type: "string" },
+                type: { type: "string" },
+                remarks: { type: "string" }
+              }
+            }
+          },
+          pageSize: 20
+        },
+        height: 430,
+        scrollable: true,
+        sortable: true,
+        filterable: true,
+        pageable: {
+          input: true,
+          numeric: false
+        },
+        columns: [
+          { field: "datetime", title: "datetime", width: "130px" },
+          { field: "type", title: "Type", width: "130px" },
+          { field: "remarks", title: "Remarks", width: "130px" }                 
+        ]
+      });
+    };
+    $(document).ready(
+      function(){
+        $("#submit").click(function()
+        {
+          if($("#txtNric").val()=="")
+          {
+            alert('Please enter NRIC');
+            return false;
+          }
+          else
+          {
+            getActivities();
+          }
+        });
+      }
+    );
+    </script>
+  </body>
+</html>

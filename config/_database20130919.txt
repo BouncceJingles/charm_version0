@@ -1,0 +1,53 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.7
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Sep 19, 2013 at 06:34 AM
+-- Server version: 5.5.29
+-- PHP Version: 5.4.10
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `charm`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `residents`
+--
+
+CREATE TABLE `residents` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nric` varchar(255) DEFAULT NULL,
+  `fullName` varchar(255) DEFAULT NULL,
+  `checkInDate` varchar(255) DEFAULT NULL,
+  `feedingMethod` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `residents`
+--
+
+INSERT INTO `residents` (`id`, `nric`, `fullName`, `checkInDate`, `feedingMethod`) VALUES
+(1, 'S1122334A', 'Aladdin', '25/11/2003', 'Tube'),
+(2, 'S9988776B', 'Johnwalker', '08/02/2009', 'soft');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblActivityLogs`
+--
+
+CREATE TABLE `tblActivityLogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nric` varchar(60) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `data` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

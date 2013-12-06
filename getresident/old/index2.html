@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="CHARM - Centralized Health & Activity Record Manager">
+    <meta name="author" content="CHARM Dev Team">
+    <link rel="shortcut icon" href="../../ico/favicon.png">
+    
+    <title>Resident Details</title>
+    
+    <!-- CSS -->
+    <link href="../../css/bootstrap.css" rel="stylesheet">
+    <link href="../../css/non-responsive.css" rel="stylesheet">
+    <style>
+      body {
+        padding: 40px;
+        background-color: #9CC4E4;
+      }
+      .container {
+        width: 100%;
+        min-width: 450px;
+      }
+      .check-nric {
+        max-width: 530px;
+        margin: 0 auto;
+        padding: 60px;
+        border-radius: 6px;
+        background-color: #E9F2F9;
+      }
+      .check-nric h2 {
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .check-nric input {
+        position: relative;
+        font-size: 16px;
+        height: auto;
+        padding: 10px;
+        -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+                box-sizing: border-box;
+        margin-bottom: 10px;
+      }
+      .check-nric input:focus {
+        z-index: 2;
+      }
+      .check-nric button {
+        margin-bottom: 10px;
+      }
+      .display {
+        margin-left: auto ;
+        margin-right: auto ;
+        text-align: center;
+      }
+      .no-nric, .cannot-find  {
+        display: none;
+      }
+    </style>
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="./js/html5shiv.js"></script>
+      <script src="./js/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <div  class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">CHARM</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#">Home</a></li>
+            <li class="active"><a href="#">Resident Activities</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+          <div class="navbar-form navbar-right get-record">
+            <input type="text" class="form-control input-sm" placeholder="Enter nric" name="txtNric" id="txtNric"  autofocus>
+            <button class="btn btn-default btn-sm" type="submit" value="Get Record" id="submit">Get Record</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="check-nric">
+        <h2>Get Resident Details</h2>
+        <input type="text" class="form-control" placeholder="Enter nric" name="txtNric" id="txtNric"  autofocus>
+        <button class="btn btn-lg btn-primary btn-block" value="Get Record" id="submit">Get Record</button>
+        <div class="error no-nric alert alert-danger">Please enter NRIC!</div>
+        <div class="error cannot-find alert alert-warning">No result found.!</div>
+        <div class="display"></div>
+      </div>
+    </div> <!-- /container -->
+    
+    <!-- Javascript put end of body -->
+    <script type="text/javascript" src="../../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#submit").click(function(){
+          $(".error").hide();
+          if($("#txtNric").val()==""){
+            $(".no-nric").fadeIn('slow');
+            return false;
+          }
+          else{
+            $(".display").html('<span class="normal"><img src="../../images/loading.gif"><\/span>');
+            $.getJSON("../api/getResident.php",{nric:$("#txtNric").val()},function(json){
+              $(".display").fadeTo('slow','0.99');
+              if(json.success == 1){
+                data = "<span id='msg'>Welcome "+json.data.fullName+"<\/span><br/>"+json.data.gender+"<br/>"+json.data.dob+"<br/>"+json.data.feedingMethod+"<br/>";
+                $(".display").fadeIn('slow',function(){$(".display").html("<span id='msg'>"+data+"<\/span>");});
+              }
+              else{
+                $(".display").hide();
+                $(".cannot-find").fadeIn('slow');
+              }
+            });
+            return false;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

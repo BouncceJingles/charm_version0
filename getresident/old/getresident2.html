@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="CHARM - Centralized Health & Activity Record Manager">
+    <meta name="author" content="CHARM Dev Team">
+    <link rel="shortcut icon" href="./ico/favicon.png">
+    
+    <title>Resident Activity</title>
+    
+    <!-- CSS -->
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/non-responsive.css" rel="stylesheet">
+    <link href="./viewactivities/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="./viewactivities/styles/kendo.default.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #9CC4E4;
+      }
+      .container {
+        width: 71%;
+        min-width: 450px;
+      }
+      .get-record input {
+        max-width: 100px;
+      }
+    </style>
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="./js/html5shiv.js"></script>
+      <script src="./js/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body style>
+	<div  class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">CHARM</a>
+        </div>
+        <div class="navbar-collapse collapse">
+		  <ul class="nav navbar-nav">
+            <li><a href="#">Home</a></li>
+            <li class="active"><a href="#">Resident Activities</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+          <div class="navbar-form navbar-right get-record">
+            <input type="text" class="form-control input-sm" placeholder="Enter nric" name="txtNric" id="txtNric"  autofocus>
+            <button class="btn btn-default btn-sm" value="Get Record" id="submit">Get Record</button>
+          </div>
+        </div>
+      </div>
+    </div>
+	<div id="cnt"></div>
+	<div id="tbl"></div><!-- /container -->
+    
+    <!-- Javascript put end of body -->
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/bootbox.min.js"></script>
+    <script type="text/javascript" src="./viewactivities/js/jquery-2.0.3.js"></script>
+    <script type="text/javascript" src="./viewactivities/js/kendo.web.min.js"></script>
+    <script type="text/javascript" src="./viewactivities/shared/js/console.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#submit").click(function(){
+          if($("#txtNric").val()==""){
+			bootbox.alert('Please enter NRIC');
+            return false;
+          }
+          else{
+            $.getJSON("api/getResident.php",{nric:$("#txtNric").val()},function(json){
+              if(json.success == 1){
+                setGrid(json.data);
+              }
+              else{
+                bootbox.alert("Error: No result found");
+              }
+            });
+            return false;
+          }
+        });
+      });
+	function setGrid(json){
+        //alert(activitiesData);
+		document.getElementById("tbl").innerHTML = "<table border = '1'>" +
+		"<tr>" +
+		"<td>ID</td>" +
+		"<td>" + json.id + "</td>" +
+		"</tr>" +
+		"<tr>" +
+		"<td>Full Name</td>" +
+		"<td>" + json.fullName + "</td>" +
+		"</tr>" +
+		"<tr>" +
+		"<td>NRIC</td>" +
+		"<td>" + json.nric + "</td>" +
+		"</tr>" +
+		"<tr>" +
+		"<td>Gender</td>" +
+		"<td>" + json.gender + "</td>" +
+		"</tr>" +
+		"<tr>" +
+		"<td>Date of Birth</td>" +
+		"<td>" + json.dob + "</td>" +
+		"</tr>" +
+		"<tr>" +
+		"<td>Check in Date</td>" +
+		"<td>" + json.checkInDate + "</td>" +
+		"</tr>" +
+		"<tr>" +
+		"<td>Feeding Method</td>" +
+		"<td>" + json.feedingMethod + "</td>" +
+		"</tr>" +
+		"<tr>" +
+		"<td>Emergency Contact Number</td>" +
+		"<td>" + json.emergencyContactNumber + "</td>" +
+		"</tr>" +
+		"<table>";
+    }
+    </script>
+  </body>
+</html>
